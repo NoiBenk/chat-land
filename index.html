@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>WIP</title>
+    <meta charset="UTF-8">
+    <title>TESTING</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Heya!</h1>
-    <p>This project is still in VERY early development! So stay patient!</p>
+
+    <h1>TESTING</h1>
+
+    <!-- Login Section -->
+    <div id="login-box">
+        <input type="text" id="username" placeholder="Enter username">
+        <button onclick="login()">Sign In</button>
+    </div>
+
+    <!-- Logged In Section -->
+    <div id="app" style="display:none;">
+        <h2>Welcome, <span id="currentUser"></span></h2>
+
+        <button onclick="logout()">Logout</button>
+
+        <h3>Members</h3>
+        <ul id="userList"></ul>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
