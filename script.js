@@ -1,6 +1,10 @@
-let users = JSON.parse(localStorage.getItem("users")) || [];
+const supabaseUrl = "https://zeggxkkracfewofebacg.supabase.co/rest/v1/";
+const supabaseKey = "sb_publishable_I5mGWcZ5y0RGTpi9trPXOA_swKDOopK";
 
-function login() {
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// LOGIN
+async function login() {
     const usernameInput = document.getElementById("username");
     const username = usernameInput.value.trim();
 
@@ -9,22 +13,27 @@ function login() {
         return;
     }
 
-    // Save user if not already in list
-    if (!users.includes(username)) {
-        users.push(username);
-        localStorage.setItem("users", JSON.stringify(users));
+    // Insert into database
+    const { error } = await supabase
+        .from("users")
+        .insert([{ username }]);
+
+    if (error) {
+        alert("Error: " + error.message);
+        return;
     }
 
     localStorage.setItem("currentUser", username);
-
     showApp();
 }
 
+// LOGOUT
 function logout() {
     localStorage.removeItem("currentUser");
     location.reload();
 }
 
+// SHOW APP
 function showApp() {
     const currentUser = localStorage.getItem("currentUser");
 
@@ -37,16 +46,26 @@ function showApp() {
     renderUsers();
 }
 
-function renderUsers() {
+// LOAD USERS
+async function renderUsers() {
+    const { data, error } = await supabase
+        .from("users")
+        .select("*");
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
     const userList = document.getElementById("userList");
     userList.innerHTML = "";
 
-    users.forEach(user => {
+    data.forEach(user => {
         const li = document.createElement("li");
-        li.textContent = user;
+        li.textContent = user.username;
         userList.appendChild(li);
     });
 }
 
-// Auto-login if already signed in
+// AUTO LOGIN
 showApp();
